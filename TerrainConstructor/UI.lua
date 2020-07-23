@@ -38,35 +38,20 @@ NewGuiPart3.TextScaled = true
 NewGuiPart3.TextColor3 = Color3.new(1, 1, 1)
 NewGuiPart3.Parent = NewGuiPart2
 NewGuiPart3.MouseButton1Click:Connect(function()
-	local selection = game:GetService("Selection")
+	if game.Workspace.Camera.TerrainConstructorTemp:FindFirstChild("TerrainScaler") then
+		NewGuiPart3.Text = "Enable terrain drag"
+		game.Workspace.Camera.TerrainConstructorTemp.TerrainScaler.Parent = game.ServerStorage.TerrainConstructorAssets
+	else
+		local selection = game:GetService("Selection")
+		NewGuiPart3.Text = "Disable terrain drag"
+		game.ServerStorage.TerrainConstructorAssets.TerrainScaler.Parent = game.Workspace.Camera.TerrainConstructorTemp
+		game.ServerStorage.TerrainConstructorAssets.TerrainScaler.CFrame = mouse.Hit
+		local selectTable = {game.Workspace.Camera.TerrainConstructorTemp.TerrainScaler}
+		selection:Set(selectTable)
+	end
 	
-	game.ServerStorage.TerrainConstructorAssets.TerrainScaler.Parent = game.Workspace.Camera.TerrainConstructorTemp
-	game.ServerStorage.TerrainConstructorAssets.TerrainScaler.CFrame = mouse.Hit
-	local selectTable = {game.Workspace.Camera.TerrainConstructorTemp.TerrainScaler}
-	selection:Set(selectTable)
 end)
 -------
-local NewGuiPart4 = Instance.new("TextButton")
-NewGuiPart4.Active = true
-NewGuiPart4.BackgroundTransparency = 1
-NewGuiPart4.BorderSizePixel = 0
-NewGuiPart4.Name = "RemoveDrag"
-NewGuiPart4.Selectable = true
-NewGuiPart4.Size = UDim2.new(0.100000001, 0, 1, 0)
-NewGuiPart4.Position = UDim2.new(0.1, 0, 0, 0)
-NewGuiPart4.Style = Enum.ButtonStyle.Custom
-NewGuiPart4.FontSize = Enum.FontSize.Size14
-NewGuiPart4.Text = "Disable terrain drag"
-NewGuiPart4.TextScaled = true
-NewGuiPart4.TextColor3 = Color3.new(1, 1, 1)
-NewGuiPart4.Parent = NewGuiPart2
-NewGuiPart4.MouseButton1Click:Connect(function()
-	if game.Workspace.Camera.TerrainConstructorTemp:FindFirstChild("TerrainScaler") then
-		game.Workspace.Camera.TerrainConstructorTemp.TerrainScaler.Parent = game.ServerStorage.TerrainConstructorAssets
-	end
-end)
-
-
 
 function UI:GetInstances()
 	return NewGuiPart2
