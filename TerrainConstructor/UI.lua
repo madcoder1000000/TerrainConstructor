@@ -34,6 +34,7 @@ NewGuiPart3.Size = UDim2.new(0.100000001, 0, 1, 0)
 NewGuiPart3.Style = Enum.ButtonStyle.Custom
 NewGuiPart3.FontSize = Enum.FontSize.Size14
 NewGuiPart3.Text = "Enable terrain drag"
+NewGuiPart3.TextScaled = true
 NewGuiPart3.TextColor3 = Color3.new(1, 1, 1)
 NewGuiPart3.Parent = NewGuiPart2
 NewGuiPart3.MouseButton1Click:Connect(function()
@@ -45,19 +46,21 @@ NewGuiPart3.MouseButton1Click:Connect(function()
 	selection:Set(selectTable)
 end)
 -------
-local NewGuiPart3 = Instance.new("TextButton")
-NewGuiPart3.Active = true
-NewGuiPart3.BackgroundTransparency = 1
-NewGuiPart3.BorderSizePixel = 0
-NewGuiPart3.Name = "RemoveDrag"
-NewGuiPart3.Selectable = true
-NewGuiPart3.Size = UDim2.new(0.100000001, 0, 1, 0)
-NewGuiPart3.Style = Enum.ButtonStyle.Custom
-NewGuiPart3.FontSize = Enum.FontSize.Size14
-NewGuiPart3.Text = "Disable terrain drag"
-NewGuiPart3.TextColor3 = Color3.new(1, 1, 1)
-NewGuiPart3.Parent = NewGuiPart2
-NewGuiPart3.MouseButton1Click:Connect(function()
+local NewGuiPart4 = Instance.new("TextButton")
+NewGuiPart4.Active = true
+NewGuiPart4.BackgroundTransparency = 1
+NewGuiPart4.BorderSizePixel = 0
+NewGuiPart4.Name = "RemoveDrag"
+NewGuiPart4.Selectable = true
+NewGuiPart4.Size = UDim2.new(0.100000001, 0, 1, 0)
+NewGuiPart4.Position = UDim2.new(0.1, 0, 0, 0)
+NewGuiPart4.Style = Enum.ButtonStyle.Custom
+NewGuiPart4.FontSize = Enum.FontSize.Size14
+NewGuiPart4.Text = "Disable terrain drag"
+NewGuiPart4.TextScaled = true
+NewGuiPart4.TextColor3 = Color3.new(1, 1, 1)
+NewGuiPart4.Parent = NewGuiPart2
+NewGuiPart4.MouseButton1Click:Connect(function()
 	if game.Workspace.Camera.TerrainConstructorTemp:FindFirstChild("TerrainScaler") then
 		game.Workspace.Camera.TerrainConstructorTemp.TerrainScaler.Parent = game.ServerStorage.TerrainConstructorAssets
 	end
