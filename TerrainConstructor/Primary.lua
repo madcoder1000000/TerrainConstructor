@@ -25,10 +25,16 @@ function permLoad()
 		print("Plugin has loaded before, no new perm assets need to be generated.")
 	else
 		print("Plugin has not loaded before here, generating event libraries.")
-		local lib = Instance.new("Model", game.Workspace.Camera)
+		local lib = Instance.new("Model")
+		lib.Parent = game.Workspace.Camera
 		for i,item in pairs(script.Parent.Events:GetChildren()) do
 			item.Parent = lib
 		end
+		for i,item in pairs(script.Parent.Modules:GetChildren()) do
+			item.Parent = lib
+		end
+		local val1 = Instance.new("StringValue", lib)
+		val1.Name = "MaterialName"
 		lib.Name = "TerrainConstructorPerm"
 	end
 end
