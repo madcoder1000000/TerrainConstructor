@@ -1,0 +1,606 @@
+<roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
+	<External>null</External>
+	<External>nil</External>
+	<Item class="Folder" referent="RBXA4AAFD6AD2F14DAAA7696F02FBB2243F">
+		<Properties>
+			<BinaryString name="AttributesSerialize"></BinaryString>
+			<string name="Name">TerrainConstructor</string>
+			<BinaryString name="Tags"></BinaryString>
+		</Properties>
+		<Item class="Script" referent="RBX922FA17EBAA44DB4AB9798046D3F29EA">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<bool name="Disabled">false</bool>
+				<Content name="LinkedSource"><null></null></Content>
+				<string name="Name">Primary</string>
+				<string name="ScriptGuid">{72BC35DB-E78B-4E74-AC4F-474DA114222D}</string>
+				<ProtectedString name="Source"><![CDATA[local toolbar = plugin:CreateToolbar("TerrainConstructor")
+local UI = require(script.Parent.UI)
+local wCount = 0
+local ChangeHistoryService = game:GetService("ChangeHistoryService")
+
+function unload()
+	if game.Workspace.Camera:FindFirstChild("TerrainConstructorTemp") then
+		game.Workspace.Camera.TerrainConstructorTemp:Destroy()
+		game.ServerStorage.TerrainConstructorAssets:Destroy()
+	end
+	
+end
+function load()
+	local container = Instance.new("Model", game.Workspace.Camera)
+	container.Name = "TerrainConstructorTemp"
+	local c2 = Instance.new("Model", game.ServerStorage)
+	c2.Name = "TerrainConstructorAssets"
+	for i,item in pairs(script.Parent.Instances:GetChildren()) do
+		item.Parent = c2
+	end
+	UI:assignMouse(plugin:GetMouse())
+end
+function permLoad()
+	if game.Workspace.Camera:FindFirstChild("TerrainConstructorPerm") then
+		print("Plugin has loaded before, no new perm assets need to be generated.")
+	else
+		print("Plugin has not loaded before here, generating event libraries.")
+		local lib = Instance.new("Model", game.Workspace.Camera)
+		for i,item in pairs(script.Parent.Events:GetChildren()) do
+			item.Parent = lib
+		end
+		lib.Name = "TerrainConstructorPerm"
+	end
+end
+permLoad()
+
+function onClick()
+	unload()
+	load()
+	local int = UI:GetInstances()
+	local w = UI:GetWidget()
+	--Totally followed a tutorial lol.
+	local testWidget = plugin:CreateDockWidgetPluginGui("Main"..wCount, w)
+	testWidget.Title = "TerrainConstructor Menu"  -- Optional widget title
+	int.Parent = testWidget
+	
+	
+	wCount = wCount + 1
+end
+
+function setWaypoint(point)
+	ChangeHistoryService:SetWaypoint(point)
+	
+end
+if game.Workspace.Camera:FindFirstChild("TerrainConstructorPerm") then
+		game.Workspace.Camera.TerrainConstructorPerm.SetUndoWaypoint.Event:Connect(setWaypoint)
+end
+
+local newScriptButton = toolbar:CreateButton("TerrainConstructor Menu", "Opens the TerrainConstructor plugin menu", "rbxassetid://413372165")
+newScriptButton.Click:Connect(onClick)]]></ProtectedString>
+				<BinaryString name="Tags"></BinaryString>
+			</Properties>
+		</Item>
+		<Item class="Folder" referent="RBXB77ACA4D6DDC4CB188ACE3BEE3C0CBC7">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<string name="Name">Modules</string>
+				<BinaryString name="Tags"></BinaryString>
+			</Properties>
+			<Item class="ModuleScript" referent="RBXE75065167AD145A395FF220554FD3863">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<Content name="LinkedSource"><null></null></Content>
+					<string name="Name">TerrainMover</string>
+					<string name="ScriptGuid">{4376ADDE-64D5-4867-A02B-BA423E6761C1}</string>
+					<ProtectedString name="Source"><![CDATA[local TerrainMover = {}
+
+function TerrainMover.Move(pos)
+	game.Workspace.CurrentCamera.TerrainConstructor.SpawnPos.CFrame = pos
+end
+
+return TerrainMover]]></ProtectedString>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+		</Item>
+		<Item class="ModuleScript" referent="RBX29A4B19494DC459D9823E60B499CCB4B">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<Content name="LinkedSource"><null></null></Content>
+				<string name="Name">UI</string>
+				<string name="ScriptGuid">{AE35DD3A-D206-4C7D-B87D-92C828E1FDA4}</string>
+				<ProtectedString name="Source"><![CDATA[local UI = {}
+
+local mouse;
+
+function UI:assignMouse(mouse1)
+	mouse = mouse1
+end
+
+local widgetInfo = DockWidgetPluginGuiInfo.new(
+	Enum.InitialDockState.Top,  -- Widget will be initialized in floating panel
+	true,   -- Widget will be initially enabled
+	true,  -- Don't override the previous enabled state
+	150,    -- Default width of the floating window
+	150,    -- Default height of the floating window
+	150,    -- Minimum width of the floating window
+	150     -- Minimum height of the floating window
+)
+--Create UI elements
+local NewGuiPart1 = Instance.new("UIListLayout")
+-------
+local NewGuiPart2 = Instance.new("Frame")
+NewGuiPart2.BackgroundColor3 = Color3.new(0.129412, 0.129412, 0.129412)
+NewGuiPart2.BorderSizePixel = 0
+NewGuiPart2.Size = UDim2.new(1, 0, 1, 0)
+NewGuiPart1.Parent = NewGuiPart2
+-------
+local NewGuiPart3 = Instance.new("TextButton")
+NewGuiPart3.Active = true
+NewGuiPart3.BackgroundTransparency = 1
+NewGuiPart3.BorderSizePixel = 0
+NewGuiPart3.Name = "DragTerrain"
+NewGuiPart3.Selectable = true
+NewGuiPart3.Size = UDim2.new(0.100000001, 0, 1, 0)
+NewGuiPart3.Style = Enum.ButtonStyle.Custom
+NewGuiPart3.FontSize = Enum.FontSize.Size14
+NewGuiPart3.Text = "Enable terrain drag"
+NewGuiPart3.TextColor3 = Color3.new(1, 1, 1)
+NewGuiPart3.Parent = NewGuiPart2
+NewGuiPart3.MouseButton1Click:Connect(function()
+	local selection = game:GetService("Selection")
+	
+	game.ServerStorage.TerrainConstructorAssets.TerrainScaler.Parent = game.Workspace.Camera.TerrainConstructorTemp
+	game.ServerStorage.TerrainConstructorAssets.TerrainScaler.CFrame = mouse.Hit
+	local selectTable = {game.Workspace.Camera.TerrainConstructorTemp.TerrainScaler}
+	selection:Set(selectTable)
+end)
+-------
+local NewGuiPart3 = Instance.new("TextButton")
+NewGuiPart3.Active = true
+NewGuiPart3.BackgroundTransparency = 1
+NewGuiPart3.BorderSizePixel = 0
+NewGuiPart3.Name = "RemoveDrag"
+NewGuiPart3.Selectable = true
+NewGuiPart3.Size = UDim2.new(0.100000001, 0, 1, 0)
+NewGuiPart3.Style = Enum.ButtonStyle.Custom
+NewGuiPart3.FontSize = Enum.FontSize.Size14
+NewGuiPart3.Text = "Disable terrain drag"
+NewGuiPart3.TextColor3 = Color3.new(1, 1, 1)
+NewGuiPart3.Parent = NewGuiPart2
+NewGuiPart3.MouseButton1Click:Connect(function()
+	if game.Workspace.Camera.TerrainConstructorTemp:FindFirstChild("TerrainScaler") then
+		game.Workspace.Camera.TerrainConstructorTemp.TerrainScaler.Parent = game.ServerStorage.TerrainConstructorAssets
+	end
+end)
+
+
+
+function UI:GetInstances()
+	return NewGuiPart2
+end
+function UI:GetWidget()
+	return widgetInfo
+end
+
+return UI]]></ProtectedString>
+				<BinaryString name="Tags"></BinaryString>
+			</Properties>
+		</Item>
+		<Item class="Folder" referent="RBX1B7A420FEDAF4448BD1026D97D9B4406">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<string name="Name">Instances</string>
+				<BinaryString name="Tags"></BinaryString>
+			</Properties>
+			<Item class="Part" referent="RBX7694D87B8CEA413E86F111D180265B85">
+				<Properties>
+					<bool name="Anchored">false</bool>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<float name="BackParamA">-0.5</float>
+					<float name="BackParamB">0.5</float>
+					<token name="BackSurface">0</token>
+					<token name="BackSurfaceInput">0</token>
+					<float name="BottomParamA">-0.5</float>
+					<float name="BottomParamB">0.5</float>
+					<token name="BottomSurface">0</token>
+					<token name="BottomSurfaceInput">0</token>
+					<CoordinateFrame name="CFrame">
+						<X>-4.5</X>
+						<Y>0.5</Y>
+						<Z>60.5</Z>
+						<R00>1</R00>
+						<R01>0</R01>
+						<R02>0</R02>
+						<R10>0</R10>
+						<R11>1</R11>
+						<R12>0</R12>
+						<R20>0</R20>
+						<R21>0</R21>
+						<R22>1</R22>
+					</CoordinateFrame>
+					<bool name="CanCollide">true</bool>
+					<bool name="CastShadow">true</bool>
+					<int name="CollisionGroupId">0</int>
+					<Color3uint8 name="Color3uint8">4278190335</Color3uint8>
+					<PhysicalProperties name="CustomPhysicalProperties">
+						<CustomPhysics>false</CustomPhysics>
+					</PhysicalProperties>
+					<float name="FrontParamA">-0.5</float>
+					<float name="FrontParamB">0.5</float>
+					<token name="FrontSurface">0</token>
+					<token name="FrontSurfaceInput">0</token>
+					<float name="LeftParamA">-0.5</float>
+					<float name="LeftParamB">0.5</float>
+					<token name="LeftSurface">0</token>
+					<token name="LeftSurfaceInput">0</token>
+					<bool name="Locked">false</bool>
+					<bool name="Massless">false</bool>
+					<token name="Material">832</token>
+					<string name="Name">TerrainScaler</string>
+					<float name="Reflectance">0</float>
+					<float name="RightParamA">-0.5</float>
+					<float name="RightParamB">0.5</float>
+					<token name="RightSurface">0</token>
+					<token name="RightSurfaceInput">0</token>
+					<int name="RootPriority">0</int>
+					<Vector3 name="RotVelocity">
+						<X>0</X>
+						<Y>0</Y>
+						<Z>0</Z>
+					</Vector3>
+					<BinaryString name="Tags"></BinaryString>
+					<float name="TopParamA">-0.5</float>
+					<float name="TopParamB">0.5</float>
+					<token name="TopSurface">0</token>
+					<token name="TopSurfaceInput">0</token>
+					<float name="Transparency">0.5</float>
+					<Vector3 name="Velocity">
+						<X>0</X>
+						<Y>0</Y>
+						<Z>0</Z>
+					</Vector3>
+					<token name="formFactorRaw">1</token>
+					<token name="shape">1</token>
+					<Vector3 name="size">
+						<X>1</X>
+						<Y>1</Y>
+						<Z>1</Z>
+					</Vector3>
+				</Properties>
+				<Item class="Script" referent="RBXC2D21CE169CB46999C7CB744B13998BC">
+					<Properties>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<bool name="Disabled">false</bool>
+						<Content name="LinkedSource"><null></null></Content>
+						<string name="Name">Script</string>
+						<string name="ScriptGuid">{9B80A2F2-F5A1-4D2D-8357-93D7C97F7983}</string>
+						<ProtectedString name="Source"><![CDATA[script.Parent:GetPropertyChangedSignal("Position"):Connect(function()
+	game.Workspace.Terrain:FillBlock(script.Parent.CFrame, script.Parent.Size, Enum.Material.Grass)
+	game.Workspace.Camera.TerrainConstructorPerm.SetUndoWaypoint:Fire("TerrainConstructor_Scale")
+end)]]></ProtectedString>
+						<BinaryString name="Tags"></BinaryString>
+					</Properties>
+				</Item>
+				<Item class="SelectionBox" referent="RBX822E72FFEEC5437DA1170B9965698545">
+					<Properties>
+						<Ref name="Adornee">RBX7694D87B8CEA413E86F111D180265B85</Ref>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<Color3 name="Color3">
+							<R>0.333333343</R>
+							<G>1</G>
+							<B>0.498039246</B>
+						</Color3>
+						<float name="LineThickness">0.0500000007</float>
+						<string name="Name">SelectionBox</string>
+						<Color3 name="SurfaceColor3">
+							<R>0.0509803928</R>
+							<G>0.411764711</G>
+							<B>0.674509823</B>
+						</Color3>
+						<float name="SurfaceTransparency">1</float>
+						<BinaryString name="Tags"></BinaryString>
+						<float name="Transparency">0</float>
+						<bool name="Visible">true</bool>
+					</Properties>
+				</Item>
+				<Item class="BillboardGui" referent="RBXB630547244E24C2EBEC5872CA44047BE">
+					<Properties>
+						<bool name="Active">true</bool>
+						<Ref name="Adornee">null</Ref>
+						<bool name="AlwaysOnTop">true</bool>
+						<BinaryString name="AttributesSerialize"></BinaryString>
+						<bool name="AutoLocalize">true</bool>
+						<bool name="ClipsDescendants">true</bool>
+						<float name="DistanceLowerLimit">0</float>
+						<float name="DistanceStep">0</float>
+						<float name="DistanceUpperLimit">-1</float>
+						<bool name="Enabled">true</bool>
+						<Vector3 name="ExtentsOffset">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<Vector3 name="ExtentsOffsetWorldSpace">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<float name="LightInfluence">1</float>
+						<float name="MaxDistance">10</float>
+						<string name="Name">BillboardGui</string>
+						<Ref name="PlayerToHideFrom">null</Ref>
+						<bool name="ResetOnSpawn">true</bool>
+						<Ref name="RootLocalizationTable">null</Ref>
+						<UDim2 name="Size">
+							<XS>0</XS>
+							<XO>200</XO>
+							<YS>0</YS>
+							<YO>50</YO>
+						</UDim2>
+						<Vector2 name="SizeOffset">
+							<X>0</X>
+							<Y>0</Y>
+						</Vector2>
+						<Vector3 name="StudsOffset">
+							<X>0</X>
+							<Y>2</Y>
+							<Z>0</Z>
+						</Vector3>
+						<Vector3 name="StudsOffsetWorldSpace">
+							<X>0</X>
+							<Y>0</Y>
+							<Z>0</Z>
+						</Vector3>
+						<BinaryString name="Tags"></BinaryString>
+						<token name="ZIndexBehavior">0</token>
+					</Properties>
+					<Item class="TextLabel" referent="RBX6D3B148C67B441A7A55D195336F979E5">
+						<Properties>
+							<bool name="Active">false</bool>
+							<Vector2 name="AnchorPoint">
+								<X>0</X>
+								<Y>0</Y>
+							</Vector2>
+							<BinaryString name="AttributesSerialize"></BinaryString>
+							<bool name="AutoLocalize">true</bool>
+							<Color3 name="BackgroundColor3">
+								<R>1</R>
+								<G>1</G>
+								<B>1</B>
+							</Color3>
+							<float name="BackgroundTransparency">1</float>
+							<Color3 name="BorderColor3">
+								<R>0.105882362</R>
+								<G>0.164705887</G>
+								<B>0.207843155</B>
+							</Color3>
+							<token name="BorderMode">0</token>
+							<int name="BorderSizePixel">0</int>
+							<bool name="ClipsDescendants">false</bool>
+							<bool name="Draggable">false</bool>
+							<token name="Font">3</token>
+							<int name="LayoutOrder">0</int>
+							<float name="LineHeight">1</float>
+							<string name="Name">TextLabel</string>
+							<Ref name="NextSelectionDown">null</Ref>
+							<Ref name="NextSelectionLeft">null</Ref>
+							<Ref name="NextSelectionRight">null</Ref>
+							<Ref name="NextSelectionUp">null</Ref>
+							<UDim2 name="Position">
+								<XS>0</XS>
+								<XO>0</XO>
+								<YS>0</YS>
+								<YO>0</YO>
+							</UDim2>
+							<bool name="RichText">false</bool>
+							<Ref name="RootLocalizationTable">null</Ref>
+							<float name="Rotation">0</float>
+							<bool name="Selectable">false</bool>
+							<Ref name="SelectionImageObject">null</Ref>
+							<UDim2 name="Size">
+								<XS>0</XS>
+								<XO>200</XO>
+								<YS>0</YS>
+								<YO>50</YO>
+							</UDim2>
+							<token name="SizeConstraint">0</token>
+							<BinaryString name="Tags"></BinaryString>
+							<string name="Text">Move this part to create terrain</string>
+							<Color3 name="TextColor3">
+								<R>0</R>
+								<G>0</G>
+								<B>0</B>
+							</Color3>
+							<bool name="TextScaled">true</bool>
+							<float name="TextSize">14</float>
+							<Color3 name="TextStrokeColor3">
+								<R>0</R>
+								<G>0</G>
+								<B>0</B>
+							</Color3>
+							<float name="TextStrokeTransparency">1</float>
+							<float name="TextTransparency">0</float>
+							<token name="TextTruncate">0</token>
+							<bool name="TextWrapped">true</bool>
+							<token name="TextXAlignment">2</token>
+							<token name="TextYAlignment">1</token>
+							<bool name="Visible">true</bool>
+							<int name="ZIndex">1</int>
+						</Properties>
+						<Item class="ImageLabel" referent="RBX3A315F3CA98C4E9B9A8F7354ACD0A9F7">
+							<Properties>
+								<bool name="Active">false</bool>
+								<Vector2 name="AnchorPoint">
+									<X>0.5</X>
+									<Y>0.5</Y>
+								</Vector2>
+								<BinaryString name="AttributesSerialize"></BinaryString>
+								<bool name="AutoLocalize">true</bool>
+								<Color3 name="BackgroundColor3">
+									<R>1</R>
+									<G>1</G>
+									<B>1</B>
+								</Color3>
+								<float name="BackgroundTransparency">1</float>
+								<Color3 name="BorderColor3">
+									<R>0.105882362</R>
+									<G>0.164705887</G>
+									<B>0.207843155</B>
+								</Color3>
+								<token name="BorderMode">0</token>
+								<int name="BorderSizePixel">0</int>
+								<bool name="ClipsDescendants">false</bool>
+								<bool name="Draggable">false</bool>
+								<Content name="Image"><url>rbxassetid://3570695787</url></Content>
+								<Color3 name="ImageColor3">
+									<R>1</R>
+									<G>1</G>
+									<B>1</B>
+								</Color3>
+								<Vector2 name="ImageRectOffset">
+									<X>0</X>
+									<Y>0</Y>
+								</Vector2>
+								<Vector2 name="ImageRectSize">
+									<X>0</X>
+									<Y>0</Y>
+								</Vector2>
+								<float name="ImageTransparency">0</float>
+								<int name="LayoutOrder">0</int>
+								<string name="Name">TextLabel_Roundify_12px</string>
+								<Ref name="NextSelectionDown">null</Ref>
+								<Ref name="NextSelectionLeft">null</Ref>
+								<Ref name="NextSelectionRight">null</Ref>
+								<Ref name="NextSelectionUp">null</Ref>
+								<UDim2 name="Position">
+									<XS>0.5</XS>
+									<XO>0</XO>
+									<YS>0.5</YS>
+									<YO>0</YO>
+								</UDim2>
+								<Ref name="RootLocalizationTable">null</Ref>
+								<float name="Rotation">0</float>
+								<token name="ScaleType">1</token>
+								<bool name="Selectable">false</bool>
+								<Ref name="SelectionImageObject">null</Ref>
+								<UDim2 name="Size">
+									<XS>1</XS>
+									<XO>0</XO>
+									<YS>1</YS>
+									<YO>0</YO>
+								</UDim2>
+								<token name="SizeConstraint">0</token>
+								<Rect2D name="SliceCenter">
+									<min>
+										<X>100</X>
+										<Y>100</Y>
+									</min>
+									<max>
+										<X>100</X>
+										<Y>100</Y>
+									</max>
+								</Rect2D>
+								<float name="SliceScale">0.119999997</float>
+								<BinaryString name="Tags"></BinaryString>
+								<UDim2 name="TileSize">
+									<XS>1</XS>
+									<XO>0</XO>
+									<YS>1</YS>
+									<YO>0</YO>
+								</UDim2>
+								<bool name="Visible">true</bool>
+								<int name="ZIndex">1</int>
+							</Properties>
+						</Item>
+						<Item class="TextLabel" referent="RBX221A7E3C244A436797728AFE463BC7DB">
+							<Properties>
+								<bool name="Active">false</bool>
+								<Vector2 name="AnchorPoint">
+									<X>0</X>
+									<Y>0</Y>
+								</Vector2>
+								<BinaryString name="AttributesSerialize"></BinaryString>
+								<bool name="AutoLocalize">true</bool>
+								<Color3 name="BackgroundColor3">
+									<R>1</R>
+									<G>1</G>
+									<B>1</B>
+								</Color3>
+								<float name="BackgroundTransparency">1</float>
+								<Color3 name="BorderColor3">
+									<R>0.105882362</R>
+									<G>0.164705887</G>
+									<B>0.207843155</B>
+								</Color3>
+								<token name="BorderMode">0</token>
+								<int name="BorderSizePixel">0</int>
+								<bool name="ClipsDescendants">false</bool>
+								<bool name="Draggable">false</bool>
+								<token name="Font">3</token>
+								<int name="LayoutOrder">0</int>
+								<float name="LineHeight">1</float>
+								<string name="Name">TextLabel</string>
+								<Ref name="NextSelectionDown">null</Ref>
+								<Ref name="NextSelectionLeft">null</Ref>
+								<Ref name="NextSelectionRight">null</Ref>
+								<Ref name="NextSelectionUp">null</Ref>
+								<UDim2 name="Position">
+									<XS>0</XS>
+									<XO>0</XO>
+									<YS>0</YS>
+									<YO>0</YO>
+								</UDim2>
+								<bool name="RichText">false</bool>
+								<Ref name="RootLocalizationTable">null</Ref>
+								<float name="Rotation">0</float>
+								<bool name="Selectable">false</bool>
+								<Ref name="SelectionImageObject">null</Ref>
+								<UDim2 name="Size">
+									<XS>0</XS>
+									<XO>200</XO>
+									<YS>0</YS>
+									<YO>50</YO>
+								</UDim2>
+								<token name="SizeConstraint">0</token>
+								<BinaryString name="Tags"></BinaryString>
+								<string name="Text">Move this part to create terrain</string>
+								<Color3 name="TextColor3">
+									<R>0</R>
+									<G>0</G>
+									<B>0</B>
+								</Color3>
+								<bool name="TextScaled">true</bool>
+								<float name="TextSize">14</float>
+								<Color3 name="TextStrokeColor3">
+									<R>0</R>
+									<G>0</G>
+									<B>0</B>
+								</Color3>
+								<float name="TextStrokeTransparency">1</float>
+								<float name="TextTransparency">0</float>
+								<token name="TextTruncate">0</token>
+								<bool name="TextWrapped">true</bool>
+								<token name="TextXAlignment">2</token>
+								<token name="TextYAlignment">1</token>
+								<bool name="Visible">true</bool>
+								<int name="ZIndex">1</int>
+							</Properties>
+						</Item>
+					</Item>
+				</Item>
+			</Item>
+		</Item>
+		<Item class="Folder" referent="RBXEBED72ABDCA747C19D48742622AB322D">
+			<Properties>
+				<BinaryString name="AttributesSerialize"></BinaryString>
+				<string name="Name">Events</string>
+				<BinaryString name="Tags"></BinaryString>
+			</Properties>
+			<Item class="BindableEvent" referent="RBXE59F115FAD2F4FE78F80DB02EAD5DFB9">
+				<Properties>
+					<BinaryString name="AttributesSerialize"></BinaryString>
+					<string name="Name">SetUndoWaypoint</string>
+					<BinaryString name="Tags"></BinaryString>
+				</Properties>
+			</Item>
+		</Item>
+	</Item>
+</roblox>
