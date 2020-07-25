@@ -59,6 +59,7 @@ function updatePermFiles()
 		end
 	end
 end
+updatePermFiles()
 
 function onClick()
 	unload()
