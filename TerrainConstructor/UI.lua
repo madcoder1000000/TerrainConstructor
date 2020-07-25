@@ -1,4 +1,6 @@
 local UI = {}
+local SpawnTerrain = require(game.Workspace.Camera.TerrainConstructorPerm.SpawnTerrain)
+
 
 local mouse;
 
@@ -48,6 +50,10 @@ NewGuiPart3.MouseButton1Click:Connect(function()
 		game.ServerStorage.TerrainConstructorAssets.TerrainScaler.CFrame = mouse.Hit
 		local selectTable = {game.Workspace.Camera.TerrainConstructorTemp.TerrainScaler}
 		selection:Set(selectTable)
+		game.Workspace.TerrainConstructorTemp.TerrainScaler:GetPropertyChangedSignal("Position"):Connect(function()
+			SpawnTerrain:spawnCube(script.Parent.CFrame, script.Parent.Size, Enum.Material.Rock)
+			game.Workspace.Camera.TerrainConstructorPerm.SetUndoWaypoint:Fire("TerrainConstructor_Scale")
+		end)
 	end
 	
 end)
