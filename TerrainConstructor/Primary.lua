@@ -2,6 +2,7 @@ local toolbar = plugin:CreateToolbar("TerrainConstructor")
 local UI = require(script.Parent.UI)
 local wCount = 0
 local ChangeHistoryService = game:GetService("ChangeHistoryService")
+local currentVersion = 1
 
 function unload()
 	if game.Workspace.Camera:FindFirstChild("TerrainConstructorTemp") then
@@ -36,9 +37,28 @@ function permLoad()
 		local val1 = Instance.new("StringValue", lib)
 		val1.Name = "MaterialName"
 		lib.Name = "TerrainConstructorPerm"
+		local val2 = Instance.new("IntValue", lib)
+		val2.Name = "FileVersion"
+		val2.Value = currentVersion
+		local script1 = Instance.new("Script", lib)
+		script1.Name = "UnloadOnProduction"
+		script1.Source = "local RunService = game:GetService('RunService'); if RunService:IsStudio() then print('Core files for TerrainConstructor saved, studio detected.') else script.Parent:Destroy() end"
 	end
 end
 permLoad()
+function updatePermFiles()
+	if game.Workspace.Camera:FindFirstChild("TerrainConstructorPerm") then
+		if game.Workspace.Camera.TerrainConstructorPerm:FindFirstChild("FileVersion") then
+			if game.Workspace.Camera.TerrainConstructorPerm.FileVersion.Value ~= currentVersion then
+				game.Workspace.Camera.TerrainConstructorPerm:Destroy()
+				permLoad()
+			end
+		else
+			game.Workspace.Camera.TerrainConstructorPerm:Destroy()
+			permLoad()
+		end
+	end
+end
 
 function onClick()
 	unload()
